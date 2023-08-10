@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>R2</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+      body {
+        width: 300px;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: poppins, sans-serif;
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        border-radius: 10px;
+        border: 1px solid rgba( 255, 255, 255, 0.18 );
+        position: relative;
+        z-index: 1;
+        background: rgba(255, 255, 255, 0.7);
+      }
+      body::after {
+        content: '';
+        background-image: url('background.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        opacity: 0.5;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;   
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: none;
+        background: rgba( 69, 162, 158, 0.18 );
+        color: #000;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      button:hover {
+        background: rgba( 69, 162, 158, 0.38 );
+      }
+      input {
+        margin-top: 30px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+      }
+      h2, p {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>R2</h2>
+    <p>Bring out the best in you</p>
+    <input id="myInput" type="text" placeholder="Enter your goal">
+    <button id="setgoal">Set Goal</button>
+    <button id="backup">Generate Reply</button>
+    <script src="popup.js"></script>
+  </body>
+</html>

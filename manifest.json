@@ -1,0 +1,20 @@
+{
+    "manifest_version": 3,
+    "name": "WhatsApp Message Sender",
+    "version": "1.0",
+    "description": "Send WhatsApp messages to flask app",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": ["scripting", "activeTab"],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://web.whatsapp.com/*"],
+            "js": ["content.js", "goal.js"]
+        }
+    ]
+}
