@@ -1,31 +1,35 @@
 function fetchMessages() {
+  console.log('generating reply...');
+
   const chatElements = document.querySelectorAll(".copyable-text");
-  const otherUser = document.querySelector("._3W2ap") ? document.querySelector("._3W2ap").innerText : '';
-  let thisUser = '';
+  const otherUser = document.querySelector("._3W2ap")
+    ? document.querySelector("._3W2ap").innerText
+    : "";
+  let thisUser = "";
 
   const usernames = new Set();
 
   const chats = Array.from(chatElements)
-    .filter(element => element.getAttribute('data-pre-plain-text')) // Filter out elements with no 'data-pre-plain-text' attribute
-    .map(element => {
-      const info = element.getAttribute('data-pre-plain-text');
+    .filter((element) => element.getAttribute("data-pre-plain-text")) // Filter out elements with no 'data-pre-plain-text' attribute
+    .map((element) => {
+      const info = element.getAttribute("data-pre-plain-text");
       // const username = info.trim().slice(20, -1);
-      const usernameStartIndex = info.indexOf('] ') + 2;
-      const usernameEndIndex = info.lastIndexOf(':');
+      const usernameStartIndex = info.indexOf("] ") + 2;
+      const usernameEndIndex = info.lastIndexOf(":");
       const username = info.slice(usernameStartIndex, usernameEndIndex);
       usernames.add(username); // Add username to a set
 
-      const messageElement = element.querySelector('.selectable-text');
-      const messageText = messageElement ? messageElement.innerText : '';
+      const messageElement = element.querySelector(".selectable-text");
+      const messageText = messageElement ? messageElement.innerText : "";
 
       // If the message is an outgoing message (from "You:"), then set the thisUser
-      if (element.closest('.message-out')) {
+      if (element.closest(".message-out")) {
         thisUser = username;
       }
 
       return {
         sender: username,
-        message: messageText
+        message: messageText,
       };
     });
 
@@ -33,12 +37,12 @@ function fetchMessages() {
   const isGroup = usernames.size > 2;
 
   // Sending goal for this conversation (if any)
-  const goal = localStorage.getItem(otherUser).trim() ? localStorage.getItem(otherUser).trim() : "";
+  const goal = localStorage.getItem(otherUser)
+    ? localStorage.getItem(otherUser).trim()
+    : "";
 
   return { thisUser, otherUser, isGroup, goal, chats };
 }
-
-
 
 async function sendToServer(data) {
   const response = await fetch("http://localhost/get_reply", {
