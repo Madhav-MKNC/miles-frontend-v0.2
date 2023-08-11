@@ -9,6 +9,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   
   async function sendGoalToServer(data) {
     console.log("sent goal");
+
+    // saving logs to local cache
+    const otherUser = document.querySelector("._3W2ap") ? document.querySelector("._3W2ap").innerText : '';
+    localStorage.setItem(otherUser, data);
+
     const response = await fetch('http://localhost/set_goal', {
         method: 'POST',
         headers: {

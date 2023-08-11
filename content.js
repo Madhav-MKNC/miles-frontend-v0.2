@@ -1,6 +1,6 @@
 function fetchMessages() {
   const chatElements = document.querySelectorAll(".copyable-text");
-  const otherUserLabel = document.querySelector("._3W2ap") ? document.querySelector("._3W2ap").innerText : '';
+  const otherUser = document.querySelector("._3W2ap") ? document.querySelector("._3W2ap").innerText : '';
   let thisUser = '';
 
   const usernames = new Set();
@@ -9,6 +9,7 @@ function fetchMessages() {
     .filter(element => element.getAttribute('data-pre-plain-text')) // Filter out elements with no 'data-pre-plain-text' attribute
     .map(element => {
       const info = element.getAttribute('data-pre-plain-text');
+      // const username = info.trim().slice(20, -1);
       const usernameStartIndex = info.indexOf('] ') + 2;
       const usernameEndIndex = info.lastIndexOf(':');
       const username = info.slice(usernameStartIndex, usernameEndIndex);
@@ -31,7 +32,10 @@ function fetchMessages() {
   // If there are more than two users, including "thisUser", then it's a group chat
   const isGroup = usernames.size > 2;
 
-  return { thisUser, otherUserLabel, isGroup, chats };
+  // Sending goal for this conversation (if any)
+  const goal = localStorage.getItem(otherUser).trim() ? localStorage.getItem(otherUser).trim() : "";
+
+  return { thisUser, otherUser, isGroup, goal, chats };
 }
 
 
