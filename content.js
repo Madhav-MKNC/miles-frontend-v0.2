@@ -1,5 +1,19 @@
+// Function to get the goal of a specific user from the local cache
+function getGoalFromLocalCache(user) {
+  const data = localStorage.getItem("miles#13082023");
+  if (data) {
+    const parsedData = JSON.parse(data);
+    const conversationData = parsedData.conversation_data[user];
+    if (conversationData && conversationData.length > 0) {
+      return conversationData[0].trim(); // Return the goal, which is the first element of the array
+    }
+  }
+  return "";
+}
+
+// fetch chats, thisUser, otherUser and isGroup
 function fetchMessages() {
-  console.log('generating reply...');
+  console.log("generating reply...");
 
   const chatElements = document.querySelectorAll(".copyable-text");
   const otherUser = document.querySelector("._3W2ap")
@@ -13,6 +27,7 @@ function fetchMessages() {
     .filter((element) => element.getAttribute("data-pre-plain-text")) // Filter out elements with no 'data-pre-plain-text' attribute
     .map((element) => {
       const info = element.getAttribute("data-pre-plain-text");
+
       // const username = info.trim().slice(20, -1);
       const usernameStartIndex = info.indexOf("] ") + 2;
       const usernameEndIndex = info.lastIndexOf(":");
@@ -37,13 +52,12 @@ function fetchMessages() {
   const isGroup = usernames.size > 2;
 
   // Sending goal for this conversation (if any)
-  const goal = localStorage.getItem(otherUser)
-    ? localStorage.getItem(otherUser).trim()
-    : "";
+  const goal = getGoalFromLocalCache(user);
 
   return { thisUser, otherUser, isGroup, goal, chats };
 }
 
+// send data to backend
 async function sendToServer(data) {
   const response = await fetch("http://localhost/get_reply", {
     method: "POST",
@@ -56,6 +70,7 @@ async function sendToServer(data) {
   return result.reply;
 }
 
+// display generated reply
 function placeSuggestedReply(reply) {
   const inputBar = document.querySelector("footer");
   const replyElement = document.createElement("div");
@@ -82,6 +97,7 @@ function placeSuggestedReply(reply) {
   });
 }
 
+// main
 (async () => {
   const messages = fetchMessages();
   const reply = await sendToServer(messages);
