@@ -1,11 +1,15 @@
-// Function to get the goal of a specific user from the local cache
-function getGoalFromLocalCache(user) {
+// Function to get the preamble of a specific user from the local cache
+function getPreambleFromLocalCache(user) {
   const data = localStorage.getItem("miles#13082023");
   if (data) {
-    const parsedData = JSON.parse(data);
-    const conversationData = parsedData.conversation_data[user];
-    if (conversationData && conversationData.length > 0) {
-      return conversationData[0].trim(); // Return the goal, which is the first element of the array
+    try {
+      const parsedData = JSON.parse(data);
+      const conversationData = parsedData.conversation_data[user];
+      if (conversationData && conversationData.length > 0) {
+        return conversationData[0].trim();
+      }
+    } catch (error) {
+      console.error("Error parsing data from localStorage:", error);
     }
   }
   return "";
@@ -13,8 +17,6 @@ function getGoalFromLocalCache(user) {
 
 // fetch chats, thisUser, otherUser and isGroup
 function fetchMessages() {
-  console.log("generating reply...");
-
   const chatElements = document.querySelectorAll(".copyable-text");
   const otherUser = document.querySelector("._3W2ap")
     ? document.querySelector("._3W2ap").innerText
@@ -52,9 +54,10 @@ function fetchMessages() {
   const isGroup = usernames.size > 2;
 
   // Sending goal for this conversation (if any)
-  const goal = getGoalFromLocalCache(user);
+  const preamble = getPreambleFromLocalCache(otherUser);
+  console.log("generating reply...");
 
-  return { thisUser, otherUser, isGroup, goal, chats };
+  return { thisUser, otherUser, isGroup, preamble, chats };
 }
 
 // send data to backend

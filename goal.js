@@ -8,21 +8,34 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-
 // Function to update the local cache
-function saveDataInLocalCache(user, goal, chats) {
+function saveDataInLocalCache(user, preamble, chats) {
   const existingData = JSON.parse(localStorage.getItem("miles#13082023")) || {
     conversation_data: {},
   };
 
-  existingData.conversation_data[user] = [goal, chats];
+  existingData.conversation_data[user] = [preamble, chats];
   localStorage.setItem("miles#13082023", JSON.stringify(existingData));
 }
 
+// Function to get the preamble of a specific user from the local cache
+function getPreambleFromLocalCache(user) {
+  const data = localStorage.getItem("miles#13082023");
+  if (data) {
+    try {
+      const parsedData = JSON.parse(data);
+      const conversationData = parsedData.conversation_data[user];
+      if (conversationData && conversationData.length > 0) {
+        return conversationData[0].trim();
+      }
+    } catch (error) {
+      console.error("Error parsing data from localStorage:", error);
+    }
+  }
+  return "";
+}
 
 async function sendGoalToServer(goal) {
-  console.log("goal set");
-
   // fetching otherUser
   const otherUser = document.querySelector("._3W2ap")
     ? document.querySelector("._3W2ap").innerText
@@ -48,9 +61,25 @@ async function sendGoalToServer(goal) {
         message: messageText,
       };
     });
-  
+
+  // goal => preamble (from server)
+  const response = await fetch("http://localhost/set_goal", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      goal: goal,
+      preamble: getPreambleFromLocalCache(otherUser),
+      chats: chats
+    }),
+  });
+
+  const result = await response.json();
+  const preamble = result.preamble;
+
   // updating data in local cache
-  saveDataInLocalCache(otherUser, goal, chats);
+  saveDataInLocalCache(otherUser, preamble, chats);
 
   return "";
 }
