@@ -16,7 +16,7 @@ function getPreambleFromLocalCache(user) {
 }
 
 // fetch chats, thisUser, otherUser and isGroup
-function fetchMessages() {
+function fetchData() {
   const chatElements = document.querySelectorAll(".copyable-text");
   const otherUser = document.querySelector("._3W2ap")
     ? document.querySelector("._3W2ap").innerText
@@ -56,7 +56,16 @@ function fetchMessages() {
   // Sending goal for this conversation (if any)
   const preamble = getPreambleFromLocalCache(otherUser);
   console.log("generating reply...");
-
+  
+  /*
+  {
+    thisUser: string,
+    otherUser: string,
+    isGroup: boolean,
+    preamble: string,
+    chats: array
+  }
+  */
   return { thisUser, otherUser, isGroup, preamble, chats };
 }
 
@@ -102,7 +111,7 @@ function placeSuggestedReply(reply) {
 
 // main
 (async () => {
-  const messages = fetchMessages();
+  const messages = fetchData();
   const reply = await sendToServer(messages);
   placeSuggestedReply(reply);
 })();
