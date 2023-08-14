@@ -53,7 +53,7 @@ function fetchData() {
   const otherUser = document.querySelector("._3W2ap")
     ? document.querySelector("._3W2ap").innerText
     : "";
-  const thisUser = getUserName()? getUserName() : "";
+  let thisUser = getUserName() ? getUserName() : "";
 
   const usernames = new Set();
 
