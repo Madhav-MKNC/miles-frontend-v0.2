@@ -9,24 +9,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // Function to update the local cache
-function saveDataInLocalCache(user, preamble, chats) {
+function saveDataInLocalCache(user, goal, preamble, chats) {
   const existingData = JSON.parse(localStorage.getItem("miles#13082023")) || {
     conversation_data: {},
   };
 
-  existingData.conversation_data[user] = [preamble, chats];
+  existingData.conversation_data[user] = [goal, preamble, chats, []];
   localStorage.setItem("miles#13082023", JSON.stringify(existingData));
 }
 
-// Function to get the preamble of a specific user from the local cache
-function getPreambleFromLocalCache(user) {
+// Function to get data from local cache
+function getConversationData(user, arg) {
   const data = localStorage.getItem("miles#13082023");
   if (data) {
     try {
       const parsedData = JSON.parse(data);
       const conversationData = parsedData.conversation_data[user];
-      if (conversationData && conversationData.length > 0) {
-        return conversationData[0].trim();
+      if (conversationData && conversationData.length > 1) {
+        if (arg === "goal") {
+          return conversationData[0].trim();
+        } else if (arg === "preamble") {
+          return conversationData[1].trim();
+        }
       }
     } catch (error) {
       console.error("Error parsing data from localStorage:", error);
@@ -35,6 +39,7 @@ function getPreambleFromLocalCache(user) {
   return "";
 }
 
+// set goal and preamble
 async function sendGoalToServer(goal) {
   // fetching otherUser
   const otherUser = document.querySelector("._3W2ap")
@@ -70,7 +75,7 @@ async function sendGoalToServer(goal) {
     },
     body: JSON.stringify({
       goal: goal,
-      preamble: getPreambleFromLocalCache(otherUser),
+      preamble: getConversationData(otherUser, "preamble"),
       chats: chats
     }),
   });
@@ -79,7 +84,7 @@ async function sendGoalToServer(goal) {
   const preamble = result.preamble;
 
   // updating data in local cache
-  saveDataInLocalCache(otherUser, preamble, chats);
+  saveDataInLocalCache(otherUser, goal, preamble, chats);
 
   return "";
 }

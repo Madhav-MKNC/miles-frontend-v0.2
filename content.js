@@ -1,12 +1,16 @@
-// Function to get the preamble of a specific user from the local cache
-function getPreambleFromLocalCache(user) {
+// Function to get data from local cache
+function getConversationData(user, arg) {
   const data = localStorage.getItem("miles#13082023");
   if (data) {
     try {
       const parsedData = JSON.parse(data);
       const conversationData = parsedData.conversation_data[user];
       if (conversationData && conversationData.length > 0) {
-        return conversationData[0].trim();
+        if (arg === "goal") {
+          return conversationData[0].trim();
+        } else if (arg === "preamble") {
+          return conversationData[1].trim();
+        }
       }
     } catch (error) {
       console.error("Error parsing data from localStorage:", error);
@@ -54,19 +58,21 @@ function fetchData() {
   const isGroup = usernames.size > 2;
 
   // Sending goal for this conversation (if any)
-  const preamble = getPreambleFromLocalCache(otherUser);
+  const goal = getConversationData(otherUser, "goal");
+  const preamble = getConversationData(otherUser, "preamble");
   console.log("generating reply...");
-  
+
   /*
   {
     thisUser: string,
     otherUser: string,
     isGroup: boolean,
+    goal: string,
     preamble: string,
     chats: array
   }
   */
-  return { thisUser, otherUser, isGroup, preamble, chats };
+  return { thisUser, otherUser, isGroup, goal, preamble, chats };
 }
 
 // send data to backend
