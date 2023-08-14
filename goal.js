@@ -12,6 +12,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 function saveDataInLocalCache(user, goal, preamble, chats) {
   const existingData = JSON.parse(localStorage.getItem("miles#13082023")) || {
     conversation_data: {},
+    toggle_state: "",
+    self_user: "",
   };
 
   existingData.conversation_data[user] = [goal, preamble, chats, []];
@@ -34,6 +36,7 @@ function getConversationData(user, arg) {
       }
     } catch (error) {
       console.error("Error parsing data from localStorage:", error);
+      return "";
     }
   }
   return "";
@@ -76,7 +79,7 @@ async function sendGoalToServer(goal) {
     body: JSON.stringify({
       goal: goal,
       preamble: getConversationData(otherUser, "preamble"),
-      chats: chats
+      chats: chats,
     }),
   });
 

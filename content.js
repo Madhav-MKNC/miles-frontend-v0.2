@@ -14,6 +14,34 @@ function getConversationData(user, arg) {
       }
     } catch (error) {
       console.error("Error parsing data from localStorage:", error);
+      return "";
+    }
+  }
+  return "";
+}
+
+// Save the "self" user name
+function saveUserName(self_user) {
+  const existingData = JSON.parse(localStorage.getItem("miles#13082023")) || {
+    conversation_data: {},
+    toggle_state: "",
+    self_user: "",
+  };
+
+  existingData.self_user = self_user;
+  localStorage.setItem("miles#13082023", JSON.stringify(existingData));
+}
+
+// Get the "self" user name
+function getUserName() {
+  const data = localStorage.getItem("miles#13082023");
+  if (data) {
+    try {
+      const parsedData = JSON.parse(data);
+      return parsedData.self_user;
+    } catch (error) {
+      console.error("Error parsing data from localStorage:", error);
+      return "";
     }
   }
   return "";
@@ -25,7 +53,7 @@ function fetchData() {
   const otherUser = document.querySelector("._3W2ap")
     ? document.querySelector("._3W2ap").innerText
     : "";
-  let thisUser = "";
+  const thisUser = getUserName()? getUserName() : "";
 
   const usernames = new Set();
 
@@ -46,6 +74,7 @@ function fetchData() {
       // If the message is an outgoing message (from "You:"), then set the thisUser
       if (element.closest(".message-out")) {
         thisUser = username;
+        saveUserName(thisUser);
       }
 
       return {
