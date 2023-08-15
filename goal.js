@@ -34,6 +34,9 @@ function getConversationData(user, arg) {
 
 // set goal and preamble
 async function sendGoalToServer(goal) {
+  if (!goal.trim()){
+    return "";
+  }
   // fetching otherUser
   otherUser = document.querySelector("._3W2ap")
     ? document.querySelector("._3W2ap").innerText
