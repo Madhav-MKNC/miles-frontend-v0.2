@@ -1,18 +1,18 @@
 // Function to update the local cache
 function saveDataInLocalCache(user, goal, preamble, chats) {
-  const existingData = JSON.parse(localStorage.getItem("miles#13082023")) || {
+  const existingData = JSON.parse(localStorage.getItem("miles")) || {
     conversation_data: {},
     toggle_state: "",
     self_user: "",
   };
 
   existingData.conversation_data[user] = [goal, preamble, chats, []];
-  localStorage.setItem("miles#13082023", JSON.stringify(existingData));
+  localStorage.setItem("miles", JSON.stringify(existingData));
 }
 
 // Function to get data from local cache
 function getConversationData(user, arg) {
-  const data = localStorage.getItem("miles#13082023");
+  const data = localStorage.getItem("miles");
   if (data) {
     try {
       const parsedData = JSON.parse(data);

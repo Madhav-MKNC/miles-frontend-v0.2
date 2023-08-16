@@ -1,6 +1,6 @@
 // Function to get data from local cache
 function getConversationData(user, arg) {
-  const data = localStorage.getItem("miles#13082023");
+  const data = localStorage.getItem("miles");
   if (data) {
     try {
       const parsedData = JSON.parse(data);
@@ -22,19 +22,19 @@ function getConversationData(user, arg) {
 
 // Save the "self" user name
 function saveUserName(self_user) {
-  const existingData = JSON.parse(localStorage.getItem("miles#13082023")) || {
+  const existingData = JSON.parse(localStorage.getItem("miles")) || {
     conversation_data: {},
     toggle_state: "",
     self_user: "",
   };
 
   existingData.self_user = self_user;
-  localStorage.setItem("miles#13082023", JSON.stringify(existingData));
+  localStorage.setItem("miles", JSON.stringify(existingData));
 }
 
 // Get the "self" user name
 function getUserName() {
-  const data = localStorage.getItem("miles#13082023");
+  const data = localStorage.getItem("miles");
   if (data) {
     try {
       const parsedData = JSON.parse(data);
